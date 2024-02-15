@@ -1,2 +1,2 @@
-gunicorn application:app -w 1 --log-file -
+gunicorn application:application -w 1 --log-file -
 
