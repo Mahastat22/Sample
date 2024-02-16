@@ -1,3 +1,4 @@
+transformers
 annotated-types==0.6.0
 gunicorn
 blis==0.7.11
