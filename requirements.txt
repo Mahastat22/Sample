@@ -1,5 +1,5 @@
 transformers
-tensorflow
+torch
 gunicorn
 
 Werkzeug==2.1.0
