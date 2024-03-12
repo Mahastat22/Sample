@@ -1,3 +1,4 @@
+"""
 import spacy
 import re
 nlp = spacy.load("en_core_web_sm")
@@ -33,6 +34,7 @@ def keyword():
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)})
+"""
 if __name__ == '__main__':
     app.run(debug=True)
 
