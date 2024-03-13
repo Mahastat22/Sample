@@ -37,7 +37,7 @@ def scrape_data():
         df = pd.DataFrame(result, columns=['Name', 'Value'])
         df[['Money_Value', 'Percent_Value']] = df['Value'].apply(lambda x: pd.Series(money(x)))
         #print(df['Name', 'Money_Value'])
-        return(df.iloc[:, [0, 2]].values.tolist())
+        return(df.iloc[:, [0, 2, 3]].values.tolist())
 
     except requests.RequestException as e:
         print(f"Error: {e}")
