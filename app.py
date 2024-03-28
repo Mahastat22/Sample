@@ -1,3 +1,4 @@
+"""
 from flask import Flask, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -67,8 +68,8 @@ def get_scraped_data():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
 """
+
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -109,4 +110,4 @@ def scrape_data():
         print(f"Error: {e}")
 if __name__ == '__main__':
     app.run(debug=True)
-    """
+
