@@ -1,3 +1,64 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import pandas as pd
+import time
+
+def number_to_words(num):
+    num = int(num.replace('$', '').replace(',', ''))
+    suffixes = ['', 'K', ' Million', ' Billion', ' Trillion', 'Q', 'Qu', 'S', 'Se', 'O', 'N', 'D']
+    suffix_index = 0
+    while num >= 1000 and suffix_index < len(suffixes)-1:
+        suffix_index += 1
+        num /= 1000.0
+    return f"{num:.0f}{suffixes[suffix_index]}"
+
+from flask import Flask, request, jsonify
+application = Flask(__name__)
+app=application
+@app.route('/category', methods=['GET'])
+def scrape_data():   
+    try:
+        # Set up the WebDriver
+        driver = webdriver.Chrome()  # Or specify the path to the ChromeDriver executable
+        driver.get("https://coinmarketcap.com/cryptocurrency-category/")
+
+        # Wait for the page to load
+        time.sleep(5)
+
+        # Find the table containing the data
+        table = driver.find_element(By.XPATH, "//table[contains(@class, 'cmc-table')]")
+        rows = table.find_elements(By.TAG_NAME, "tr")
+
+        # Initialize lists to store data
+        data = []
+
+        # Extract data from each row
+        for row in rows:
+            cells = row.find_elements(By.TAG_NAME, "td")
+            if cells:
+                row_data = [cell.text for cell in cells]
+                data.append(row_data)
+        driver.quit()
+
+        df = pd.DataFrame(data)
+        #df.to_csv('coinmarketcap_data.csv', index=False)
+        filtered_df = df[df[1].isin(["E-commerce", "Ethereum Ecosystem", "Gaming", "Real Estate", "Generative AI", "Bitcoin Ecosystem", "Memes", "Video", "VR/AR", "DeFi Index", "Metaverse", "Cybersecurity"])]
+        filtered1_df = filtered_df.iloc[:, [1,2, 4]]
+        split_values = filtered1_df.iloc[:, 2].str.split('\n', expand=True)
+
+        filtered1_df['5'] = split_values[0]
+        filtered1_df['6'] = split_values[1]
+        filtered1_df['5'] = filtered1_df.iloc[:,3].apply(lambda x: pd.Series(number_to_words(x)))
+
+
+        return(filtered1_df.values.tolist())
+    except requests.RequestException as e:
+        print(f"Error: {e}")
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+"""
 from flask import Flask, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -67,7 +128,7 @@ def get_scraped_data():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
+"""
 
 
 """
